@@ -8,11 +8,11 @@ Spring Boot starter providing 5 MCP tools for graph database operations. Support
 <dependency>
     <groupId>io.github.massimilianopili</groupId>
     <artifactId>mcp-graph-tools</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
-Requires Java 17+ and Spring AI 1.0.0+.
+Requires Java 21+ and Spring AI 1.0.0+.
 
 ## Tools
 
@@ -64,7 +64,7 @@ Both backends can be active simultaneously. The `backend` parameter in each tool
 
 ## Requirements
 
-- Java 17+
+- Java 21+
 - Spring Boot 3.4+
 - Spring AI 1.0.0+
 - Neo4j 5.x (for Neo4j backend) and/or PostgreSQL with AGE extension (for AGE backend)
