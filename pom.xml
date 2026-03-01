@@ -7,7 +7,7 @@
 
     <groupId>io.github.massimilianopili</groupId>
     <artifactId>mcp-graph-tools</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <packaging>jar</packaging>
     <name>MCP Graph Tools</name>
     <description>MCP tools per graph database: Neo4j (Bolt) e Apache AGE (PostgreSQL). Query Cypher read/write, schema inspection, statistiche.</description>
