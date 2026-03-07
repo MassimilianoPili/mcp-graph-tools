@@ -65,6 +65,7 @@ public class GraphConfig {
                 ds.setPassword(props.getAgeDbPassword());
                 ds.setMaximumPoolSize(2);
                 ds.setPoolName("age-pool");
+                ds.setConnectionInitSql("LOAD 'age'; SET search_path = ag_catalog, \"$user\", public");
 
                 JdbcTemplate jdbc = new JdbcTemplate(ds);
                 AgeCypherExecutor ageExecutor = new AgeCypherExecutor(jdbc, props.getAgeGraphName());

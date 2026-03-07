@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,19 +25,25 @@ public class AgeCypherExecutor implements CypherExecutor {
 
     public void initGraph() {
         try {
-            jdbc.execute("CREATE EXTENSION IF NOT EXISTS age");
-            jdbc.execute("LOAD 'age'");
-            jdbc.execute("SET search_path = ag_catalog, \"$user\", public");
-            try {
-                jdbc.execute("SELECT create_graph('" + graphName + "')");
-                log.info("AGE graph '{}' creato", graphName);
-            } catch (Exception e) {
-                if (e.getMessage() != null && e.getMessage().contains("already exists")) {
-                    log.debug("AGE graph '{}' gia' esistente", graphName);
-                } else {
-                    throw e;
+            // All statements must run on the same connection (AGE session state)
+            jdbc.execute((org.springframework.jdbc.core.ConnectionCallback<Void>) con -> {
+                try (Statement stmt = con.createStatement()) {
+                    stmt.execute("CREATE EXTENSION IF NOT EXISTS age");
+                    stmt.execute("LOAD 'age'");
+                    stmt.execute("SET search_path = ag_catalog, \"$user\", public");
+                    try {
+                        stmt.execute("SELECT create_graph('" + graphName + "')");
+                        log.info("AGE graph '{}' creato", graphName);
+                    } catch (java.sql.SQLException e) {
+                        if (e.getMessage() != null && e.getMessage().contains("already exists")) {
+                            log.debug("AGE graph '{}' gia' esistente", graphName);
+                        } else {
+                            throw e;
+                        }
+                    }
                 }
-            }
+                return null;
+            });
         } catch (Exception e) {
             log.error("Errore inizializzazione AGE: {}", e.getMessage());
             throw new RuntimeException("Inizializzazione AGE fallita", e);
@@ -45,9 +52,7 @@ public class AgeCypherExecutor implements CypherExecutor {
 
     @Override
     public List<Map<String, Object>> execute(String cypher, Map<String, Object> params) {
-        jdbc.execute("LOAD 'age'");
-        jdbc.execute("SET search_path = ag_catalog, \"$user\", public");
-
+        // LOAD 'age' and SET search_path are handled by HikariCP connectionInitSql
         String sql = "SELECT * FROM cypher('" + graphName + "', $$ " + cypher + " $$) AS (result agtype)";
 
         List<Map<String, Object>> rows = new ArrayList<>();
