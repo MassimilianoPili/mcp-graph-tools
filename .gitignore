@@ -4,3 +4,6 @@ target/
 *.class
 logs/
 CLAUDE.md
+
+.env
+.env.*
