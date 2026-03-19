@@ -27,13 +27,15 @@ public class GraphTools {
     }
 
     @Tool(name = "graph_query",
-          description = "Esegui query Cypher in sola lettura sul graph database. "
-                      + "Usa per MATCH, RETURN, COUNT, path traversal. "
-                      + "Supporta backend neo4j e age (Apache AGE su PostgreSQL).")
+          description = "Execute a read-only Cypher query on the graph database. "
+                      + "Use for MATCH, RETURN, COUNT, path traversal. "
+                      + "Supports neo4j and age (Apache AGE on PostgreSQL) backends. "
+                      + "IMPORTANT: pass pure Cypher only (e.g. MATCH (n) RETURN n) — the SQL wrapper is added automatically. "
+                      + "Do not use // comments in Cypher. For AGE use RETURN {k: v} map syntax.")
     public List<Map<String, Object>> query(
-            @ToolParam(description = "Query Cypher da eseguire (solo lettura: MATCH, RETURN, etc.)") String cypher,
-            @ToolParam(description = "Parametri opzionali come JSON object (es. {\"name\": \"Alice\"})", required = false) Map<String, Object> params,
-            @ToolParam(description = "Backend: neo4j o age (default: primo disponibile)", required = false) String backend) {
+            @ToolParam(description = "Cypher query to execute (read-only: MATCH, RETURN, etc.)") String cypher,
+            @ToolParam(description = "Optional parameters as JSON object (e.g. {\"name\": \"Alice\"})", required = false) Map<String, Object> params,
+            @ToolParam(description = "Backend: neo4j or age (default: first available)", required = false) String backend) {
         try {
             CypherExecutor executor = resolveExecutor(backend);
             if (executor == null) {
@@ -56,13 +58,15 @@ public class GraphTools {
     }
 
     @Tool(name = "graph_write",
-          description = "Esegui mutazione Cypher sul graph database. "
-                      + "Usa per CREATE, MERGE, SET, DELETE, DETACH DELETE. "
-                      + "ATTENZIONE: questa operazione modifica i dati.")
+          description = "Execute a mutating Cypher query on the graph database. "
+                      + "Use for CREATE, MERGE, SET, DELETE, DETACH DELETE. "
+                      + "WARNING: this operation modifies data. "
+                      + "IMPORTANT: pass pure Cypher only — the SQL wrapper is added automatically. "
+                      + "Do not use // comments. Complex queries with multiple MERGE+MATCH must be split into separate calls.")
     public List<Map<String, Object>> write(
-            @ToolParam(description = "Query Cypher mutante (CREATE, MERGE, SET, DELETE, etc.)") String cypher,
-            @ToolParam(description = "Parametri opzionali come JSON object", required = false) Map<String, Object> params,
-            @ToolParam(description = "Backend: neo4j o age (default: primo disponibile)", required = false) String backend) {
+            @ToolParam(description = "Mutating Cypher query (CREATE, MERGE, SET, DELETE, etc.)") String cypher,
+            @ToolParam(description = "Optional parameters as JSON object", required = false) Map<String, Object> params,
+            @ToolParam(description = "Backend: neo4j or age (default: first available)", required = false) String backend) {
         try {
             CypherExecutor executor = resolveExecutor(backend);
             if (executor == null) {
@@ -86,10 +90,10 @@ public class GraphTools {
     }
 
     @Tool(name = "graph_schema",
-          description = "Mostra lo schema del graph database: labels dei nodi, tipi di relazione, "
-                      + "e proprieta' per ciascuno. Utile per capire la struttura del grafo.")
+          description = "Show the graph database schema: node labels, relationship types, "
+                      + "and properties for each. Useful for understanding the graph structure.")
     public Map<String, Object> schema(
-            @ToolParam(description = "Backend: neo4j o age (default: primo disponibile)", required = false) String backend) {
+            @ToolParam(description = "Backend: neo4j or age (default: first available)", required = false) String backend) {
         try {
             CypherExecutor executor = resolveExecutor(backend);
             if (executor == null) {
@@ -134,10 +138,10 @@ public class GraphTools {
     }
 
     @Tool(name = "graph_stats",
-          description = "Statistiche del graph database: numero totale di nodi e relazioni, "
-                      + "conteggio per label/tipo.")
+          description = "Graph database statistics: total node and relationship counts, "
+                      + "breakdown by label/type.")
     public Map<String, Object> stats(
-            @ToolParam(description = "Backend: neo4j o age (default: primo disponibile)", required = false) String backend) {
+            @ToolParam(description = "Backend: neo4j or age (default: first available)", required = false) String backend) {
         try {
             CypherExecutor executor = resolveExecutor(backend);
             if (executor == null) {
@@ -188,7 +192,7 @@ public class GraphTools {
     }
 
     @Tool(name = "graph_list_backends",
-          description = "Lista i backend graph configurati e disponibili (neo4j, age).")
+          description = "List configured and available graph backends (neo4j, age).")
     public Map<String, Object> listBackends() {
         Map<String, Object> result = new LinkedHashMap<>();
         List<Map<String, Object>> backends = new ArrayList<>();

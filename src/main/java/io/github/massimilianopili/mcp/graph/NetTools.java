@@ -31,11 +31,11 @@ public class NetTools {
     // ─── Tool: net_get_endpoint ─────────────────────────────────────────────────
 
     @Tool(name = "net_get_endpoint",
-          description = "URL di accesso per un servizio: Tailscale, pubblico, Tor. "
-                      + "Cerca per nome servizio Docker e ritorna tutti gli endpoint associati. "
-                      + "Sostituisce le tabelle 'URL Tailscale' e 'Cloudflare Tunnel' di CLAUDE.md.")
+          description = "Access URLs for a service: Tailscale, public, Tor. "
+                      + "Searches by Docker service name and returns all associated endpoints. "
+                      + "Replaces the 'Tailscale URLs' and 'Cloudflare Tunnel' tables in CLAUDE.md.")
     public Map<String, Object> getEndpoint(
-            @ToolParam(description = "Nome del servizio Docker (es. gitea, keycloak, proxy-ai)") String service) {
+            @ToolParam(description = "Docker service name (e.g. gitea, keycloak, proxy-ai)") String service) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String svc = esc(service);
@@ -64,12 +64,12 @@ public class NetTools {
     // ─── Tool: net_get_subpath ──────────────────────────────────────────────────
 
     @Tool(name = "net_get_subpath",
-          description = "Configurazione subpath di un servizio Docker: parametro, valore, effetto. "
-                      + "Spiega come il servizio gestisce il subpath nginx (Pattern A: prefix stripping, "
-                      + "Pattern B: gestione interna con SCRIPT_NAME/--base-url, BASE_PATH). "
-                      + "Sostituisce la tabella 'Configurazioni subpath' di CLAUDE.md.")
+          description = "Subpath configuration for a Docker service: parameter, value, effect. "
+                      + "Explains how the service handles the nginx subpath (Pattern A: prefix stripping, "
+                      + "Pattern B: internal handling with SCRIPT_NAME/--base-url, BASE_PATH). "
+                      + "Replaces the 'Subpath configurations' table in CLAUDE.md.")
     public Map<String, Object> getSubpath(
-            @ToolParam(description = "Nome del servizio Docker (es. gitea, keycloak, pgadmin)") String service) {
+            @ToolParam(description = "Docker service name (e.g. gitea, keycloak, pgadmin)") String service) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String svc = esc(service);
@@ -90,11 +90,11 @@ public class NetTools {
     // ─── Tool: net_get_nginx_pattern ────────────────────────────────────────────
 
     @Tool(name = "net_get_nginx_pattern",
-          description = "Pattern architetturale nginx: lazy_dns, prefix_stripping, auth_request_oauth2, auth_request_jwt. "
-                      + "Include descrizione, tipo, esempio di configurazione. "
-                      + "Sostituisce la sezione 'Nginx — Pattern architetturali' di CLAUDE.md.")
+          description = "Nginx architectural pattern: lazy_dns, prefix_stripping, auth_request_oauth2, auth_request_jwt. "
+                      + "Includes description, type, configuration example. "
+                      + "Replaces the 'Nginx — Architectural patterns' section of CLAUDE.md.")
     public Map<String, Object> getNginxPattern(
-            @ToolParam(description = "Nome pattern: lazy_dns, prefix_stripping, auth_request_oauth2, auth_request_jwt") String name) {
+            @ToolParam(description = "Pattern name: lazy_dns, prefix_stripping, auth_request_oauth2, auth_request_jwt") String name) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String n = esc(name);

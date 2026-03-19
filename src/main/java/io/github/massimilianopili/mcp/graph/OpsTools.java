@@ -32,13 +32,13 @@ public class OpsTools {
     // ─── Tool: ops_get_command ──────────────────────────────────────────────────
 
     @Tool(name = "ops_get_command",
-          description = "Cerca comandi operativi per nome o categoria. "
-                      + "Categorie: docker, systemd, maintenance, emergenza, query, cicd, sso, ssh, network, wiki. "
-                      + "Se il parametro matcha un nome esatto, ritorna quel comando. "
-                      + "Altrimenti cerca per categoria e ritorna tutti i comandi della categoria. "
-                      + "Sostituisce la sezione 'Operazioni comuni' di CLAUDE.md.")
+          description = "Search operational commands by name or category. "
+                      + "Categories: docker, systemd, maintenance, emergenza, query, cicd, sso, ssh, network, wiki. "
+                      + "If the parameter matches an exact name, returns that command. "
+                      + "Otherwise searches by category and returns all commands in that category. "
+                      + "Replaces the 'Common Operations' section of CLAUDE.md.")
     public List<Map<String, Object>> getCommand(
-            @ToolParam(description = "Nome comando (es. nginx_force_recreate) o categoria (es. docker, sso)") String nameOrCategory) {
+            @ToolParam(description = "Command name (e.g. nginx_force_recreate) or category (e.g. docker, sso)") String nameOrCategory) {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
         String q = esc(nameOrCategory);
@@ -77,14 +77,14 @@ public class OpsTools {
     // ─── Tool: ops_troubleshoot ─────────────────────────────────────────────────
 
     @Tool(name = "ops_troubleshoot",
-          description = "Cerca soluzioni per un problema o un servizio. "
-                      + "Cerca nel campo 'problem' e 'cause' dei nodi Troubleshooting. "
-                      + "Se il parametro e' un nome servizio, ritorna tutti i troubleshooting collegati. "
-                      + "Problemi noti: SSO Gitea, OAuth2 Proxy 500, nginx 500/502, Gitea 404, "
-                      + "Keycloak discovery, container disconnessi, WikiJS SAML doppio login. "
-                      + "Sostituisce la sezione 'Troubleshooting' di CLAUDE.md.")
+          description = "Search solutions for a problem or service. "
+                      + "Searches the 'problem' and 'cause' fields of Troubleshooting nodes. "
+                      + "If the parameter is a service name, returns all related troubleshooting entries. "
+                      + "Known issues: SSO Gitea, OAuth2 Proxy 500, nginx 500/502, Gitea 404, "
+                      + "Keycloak discovery, disconnected containers, WikiJS SAML double login. "
+                      + "Replaces the 'Troubleshooting' section of CLAUDE.md.")
     public List<Map<String, Object>> troubleshoot(
-            @ToolParam(description = "Problema (es. 'nginx 502') o nome servizio (es. 'keycloak')") String problemOrService) {
+            @ToolParam(description = "Problem (e.g. 'nginx 502') or service name (e.g. 'keycloak')") String problemOrService) {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
         String q = esc(problemOrService);
@@ -126,12 +126,12 @@ public class OpsTools {
     // ─── Tool: ops_get_convention ───────────────────────────────────────────────
 
     @Tool(name = "ops_get_convention",
-          description = "Convenzioni operative per categoria. "
-                      + "Categorie: git, docker, workflow, documentation, communication, security, operations. "
-                      + "Senza parametro, ritorna tutte le convenzioni. "
-                      + "Sostituisce le convenzioni sparse in CLAUDE.md e MEMORY.md.")
+          description = "Operational conventions by category. "
+                      + "Categories: git, docker, workflow, documentation, communication, security, operations. "
+                      + "Without parameter, returns all conventions. "
+                      + "Replaces conventions scattered across CLAUDE.md and MEMORY.md.")
     public List<Map<String, Object>> getConvention(
-            @ToolParam(description = "Categoria (es. git, docker, workflow) o vuoto per tutte") String category) {
+            @ToolParam(description = "Category (e.g. git, docker, workflow) or empty for all") String category) {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
 
@@ -162,11 +162,11 @@ public class OpsTools {
     // ─── Tool: ops_list_systemd ─────────────────────────────────────────────────
 
     @Tool(name = "ops_list_systemd",
-          description = "Lista tutti i servizi systemd user-level e system-level registrati nel grafo. "
-                      + "Include: dashboard-api, ttyd, ssh-agent, claude-cleanup, wiki-embargo, "
+          description = "List all user-level and system-level systemd services registered in the graph. "
+                      + "Includes: dashboard-api, ttyd, ssh-agent, claude-cleanup, wiki-embargo, "
                       + "infra-graph-sync, tailscale-watchdog. "
-                      + "Ritorna unit_file, tipo, exec_start, descrizione. "
-                      + "Sostituisce le sezioni servizi systemd di CLAUDE.md.")
+                      + "Returns unit_file, type, exec_start, description. "
+                      + "Replaces the systemd services sections of CLAUDE.md.")
     public List<Map<String, Object>> listSystemd() {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));

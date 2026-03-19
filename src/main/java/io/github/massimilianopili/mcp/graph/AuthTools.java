@@ -32,12 +32,12 @@ public class AuthTools {
     // ─── Tool: auth_get_client ─────────────────────────────────────────────────
 
     @Tool(name = "auth_get_client",
-          description = "Dettagli completi di un client Keycloak: protocollo, redirect URI, ruoli definiti, "
-                      + "servizi che lo usano, route protette. Sostituisce la sezione SSO di CLAUDE.md. "
-                      + "Client noti: gitea, oauth2-proxy, go-filemanager, dashboard-chat, wiki, grafana, "
+          description = "Full details for a Keycloak client: protocol, redirect URIs, defined roles, "
+                      + "services using it, protected routes. Replaces the SSO section of CLAUDE.md. "
+                      + "Known clients: gitea, oauth2-proxy, go-filemanager, dashboard-chat, wiki, grafana, "
                       + "knowledge-graph, minio, jenkins, server-api, nvidia_client, claude_client, codex_client.")
     public Map<String, Object> getClient(
-            @ToolParam(description = "Client ID Keycloak (es. gitea, oauth2-proxy, wiki)") String clientId) {
+            @ToolParam(description = "Keycloak client ID (e.g. gitea, oauth2-proxy, wiki)") String clientId) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String cid = esc(clientId);
@@ -83,11 +83,11 @@ public class AuthTools {
     // ─── Tool: auth_get_flow ──────────────────────────────────────────────────
 
     @Tool(name = "auth_get_flow",
-          description = "Flusso di autenticazione completo per un tipo di auth: servizi coinvolti, "
-                      + "client Keycloak, route protette, configurazione. "
-                      + "Tipi: 'oidc' (OIDC nativo), 'saml', 'oauth2-proxy' (OAuth2 Proxy), 'jwt' (JWT Bearer).")
+          description = "Complete authentication flow for an auth type: involved services, "
+                      + "Keycloak clients, protected routes, configuration. "
+                      + "Types: 'oidc' (native OIDC), 'saml', 'oauth2-proxy' (OAuth2 Proxy), 'jwt' (JWT Bearer).")
     public Map<String, Object> getFlow(
-            @ToolParam(description = "Tipo di flusso: oidc, saml, oauth2-proxy, jwt") String flowType) {
+            @ToolParam(description = "Flow type: oidc, saml, oauth2-proxy, jwt") String flowType) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String ft = esc(flowType).toLowerCase();
@@ -154,7 +154,7 @@ public class AuthTools {
     // ─── Tool: auth_list_clients ──────────────────────────────────────────────
 
     @Tool(name = "auth_list_clients",
-          description = "Lista tutti i client Keycloak nel realm SOL con protocollo e descrizione sintetica.")
+          description = "List all Keycloak clients in the SOL realm with protocol and short description.")
     public List<Map<String, Object>> listClients() {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
@@ -169,10 +169,10 @@ public class AuthTools {
     // ─── Tool: auth_get_user ──────────────────────────────────────────────────
 
     @Tool(name = "auth_get_user",
-          description = "Info su un utente Keycloak/Gitea: email, admin status, login source, ruoli assegnati, "
-                      + "client associati. Utenti noti: sol_root, root, massimiliano, visitor.")
+          description = "Details for a Keycloak/Gitea user: email, admin status, login source, assigned roles, "
+                      + "associated clients. Known users: sol_root, root, massimiliano, visitor.")
     public Map<String, Object> getUser(
-            @ToolParam(description = "Username (es. sol_root, visitor)") String username) {
+            @ToolParam(description = "Username (e.g. sol_root, visitor)") String username) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String u = esc(username);

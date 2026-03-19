@@ -35,11 +35,11 @@ public class InfraTools {
     // ─── Tool: infra_get_service ──────────────────────────────────────────────
 
     @Tool(name = "infra_get_service",
-          description = "Informazioni complete su un servizio Docker di SOL: immagine, porta, directory, "
-                      + "route nginx esposte (con auth), database usati, dipendenze. "
-                      + "Sostituisce la tabella 'Servizi e Porte' in CLAUDE.md.")
+          description = "Full details for a Docker service: image, port, directory, "
+                      + "exposed nginx routes (with auth), databases used, dependencies. "
+                      + "Replaces the 'Services and Ports' table in CLAUDE.md.")
     public Map<String, Object> getService(
-            @ToolParam(description = "Nome del container Docker (es. gitea, keycloak, grafana)") String name) {
+            @ToolParam(description = "Docker container name (e.g. gitea, keycloak, grafana)") String name) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String n = esc(name);
@@ -73,10 +73,10 @@ public class InfraTools {
     // ─── Tool: infra_get_route ────────────────────────────────────────────────
 
     @Tool(name = "infra_get_route",
-          description = "Info su una route nginx: backend, tipo di autenticazione, servizio Docker collegato. "
-                      + "Sostituisce la tabella routing path-based in CLAUDE.md.")
+          description = "Details for an nginx route: backend, auth type, linked Docker service. "
+                      + "Replaces the path-based routing table in CLAUDE.md.")
     public Map<String, Object> getRoute(
-            @ToolParam(description = "Path nginx (es. /git/, /api/, /grafana/)") String path) {
+            @ToolParam(description = "Nginx path (e.g. /git/, /api/, /grafana/)") String path) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String p = esc(path);
@@ -107,11 +107,11 @@ public class InfraTools {
     // ─── Tool: infra_find_by_auth ─────────────────────────────────────────────
 
     @Tool(name = "infra_find_by_auth",
-          description = "Elenca tutte le route e i servizi che usano un determinato tipo di autenticazione. "
-                      + "Tipi validi: 'JWT Bearer', 'OIDC nativo', 'OAuth2 Proxy', 'SAML', 'Nessuna', 'Keycloak nativo'. "
-                      + "Sostituisce la sezione Autenticazione e SSO di CLAUDE.md.")
+          description = "List all routes and services using a given authentication type. "
+                      + "Valid types: 'JWT Bearer', 'OIDC nativo', 'OAuth2 Proxy', 'SAML', 'Nessuna', 'Keycloak nativo'. "
+                      + "Replaces the Authentication and SSO section of CLAUDE.md.")
     public List<Map<String, Object>> findByAuth(
-            @ToolParam(description = "Nome del pattern auth (es. 'JWT Bearer', 'OAuth2 Proxy', 'OIDC nativo')") String authType) {
+            @ToolParam(description = "Auth pattern name (e.g. 'JWT Bearer', 'OAuth2 Proxy', 'OIDC nativo')") String authType) {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
         String a = esc(authType);
@@ -124,10 +124,10 @@ public class InfraTools {
     // ─── Tool: infra_get_dependencies ────────────────────────────────────────
 
     @Tool(name = "infra_get_dependencies",
-          description = "Dipendenze dirette di un servizio Docker (depends_on nel docker-compose). "
-                      + "Mostra sia le dipendenze del servizio sia i servizi che dipendono da esso.")
+          description = "Direct dependencies of a Docker service (depends_on in docker-compose). "
+                      + "Shows both the service's dependencies and services that depend on it.")
     public Map<String, Object> getDependencies(
-            @ToolParam(description = "Nome del container Docker") String name) {
+            @ToolParam(description = "Docker container name") String name) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
         String n = esc(name);
@@ -150,10 +150,10 @@ public class InfraTools {
     // ─── Tool: infra_get_db_consumers ────────────────────────────────────────
 
     @Tool(name = "infra_get_db_consumers",
-          description = "Elenca i servizi Docker che usano un database specifico. "
-                      + "Database validi: postgres, redis, mongodb, neo4j, libsql, age.")
+          description = "List Docker services consuming a specific database. "
+                      + "Valid databases: postgres, redis, mongodb, neo4j, libsql, age.")
     public List<Map<String, Object>> getDbConsumers(
-            @ToolParam(description = "Nome del database (es. postgres, redis, mongodb)") String db) {
+            @ToolParam(description = "Database name (e.g. postgres, redis, mongodb)") String db) {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
         String d = esc(db);
@@ -166,9 +166,9 @@ public class InfraTools {
     // ─── Tool: infra_port_map ─────────────────────────────────────────────────
 
     @Tool(name = "infra_port_map",
-          description = "Mappa completa path nginx → servizio → auth. "
-                      + "Equivalente alla tabella routing completa di CLAUDE.md. "
-                      + "Usa per rispondere a domande come 'su quale path è esposto X?' o 'quali servizi sono pubblici?'.")
+          description = "Complete nginx path -> service -> auth mapping. "
+                      + "Equivalent to the full routing table in CLAUDE.md. "
+                      + "Use to answer questions like 'which path exposes X?' or 'which services are public?'.")
     public List<Map<String, Object>> portMap() {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
@@ -182,10 +182,10 @@ public class InfraTools {
     // ─── Tool: infra_search ───────────────────────────────────────────────────
 
     @Tool(name = "infra_search",
-          description = "Ricerca full-text tra tutti i nodi infrastrutturali (DockerService, NginxRoute, Database, AuthPattern). "
-                      + "Cerca in tutti i valori stringa delle proprietà.")
+          description = "Full-text search across all infrastructure nodes (DockerService, NginxRoute, Database, AuthPattern). "
+                      + "Searches all string property values.")
     public List<Map<String, Object>> search(
-            @ToolParam(description = "Testo da cercare (case-insensitive)") String query) {
+            @ToolParam(description = "Text to search for (case-insensitive)") String query) {
         CypherExecutor age = ageExecutor();
         if (age == null) return List.of(error("AGE backend non disponibile"));
         if (query == null || query.isBlank()) return List.of(error("Query vuota"));
@@ -209,11 +209,11 @@ public class InfraTools {
     // ─── Tool: infra_update_status ────────────────────────────────────────────
 
     @Tool(name = "infra_update_status",
-          description = "Aggiorna lo stato operativo di un servizio Docker nel grafo knowledge (es. 'running', 'stopped', 'degraded'). "
-                      + "Utile dopo operazioni di deploy o manutenzione per tenere il grafo aggiornato.")
+          description = "Update the operational status of a Docker service in the knowledge graph (e.g. 'running', 'stopped', 'degraded'). "
+                      + "Useful after deploy or maintenance operations to keep the graph up to date.")
     public Map<String, Object> updateStatus(
-            @ToolParam(description = "Nome del container Docker") String name,
-            @ToolParam(description = "Stato operativo: running, stopped, degraded, unknown") String status) {
+            @ToolParam(description = "Docker container name") String name,
+            @ToolParam(description = "Operational status: running, stopped, degraded, unknown") String status) {
         CypherExecutor age = ageExecutor();
         if (age == null) return error("AGE backend non disponibile");
 
