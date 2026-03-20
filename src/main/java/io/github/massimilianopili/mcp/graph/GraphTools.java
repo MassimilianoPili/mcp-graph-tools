@@ -120,13 +120,13 @@ public class GraphTools {
                 schema.put("property_keys", propKeys.stream().map(r -> r.get("propertyKey")).toList());
 
             } else if ("age".equals(executor.getType())) {
-                // AGE: label info via SQL-like queries
+                // AGE: single-column map syntax (AS (result agtype) requires one column)
                 List<Map<String, Object>> labels = executor.execute(
-                        "MATCH (n) RETURN DISTINCT labels(n) AS labels", null);
+                        "MATCH (n) WITH DISTINCT labels(n) AS l RETURN {labels: l}", null);
                 schema.put("node_labels", labels);
 
                 List<Map<String, Object>> relTypes = executor.execute(
-                        "MATCH ()-[r]->() RETURN DISTINCT type(r) AS type", null);
+                        "MATCH ()-[r]->() WITH DISTINCT type(r) AS t RETURN {type: t}", null);
                 schema.put("relationship_types", relTypes);
             }
 
@@ -153,16 +153,16 @@ public class GraphTools {
 
             // Totale nodi
             List<Map<String, Object>> nodeCount = executor.execute(
-                    "MATCH (n) RETURN count(n) AS total_nodes", null);
+                    "MATCH (n) RETURN count(n)", null);
             if (!nodeCount.isEmpty()) {
-                stats.put("total_nodes", nodeCount.get(0).get("total_nodes"));
+                stats.put("total_nodes", nodeCount.get(0).get("result"));
             }
 
             // Totale relazioni
             List<Map<String, Object>> relCount = executor.execute(
-                    "MATCH ()-[r]->() RETURN count(r) AS total_relationships", null);
+                    "MATCH ()-[r]->() RETURN count(r)", null);
             if (!relCount.isEmpty()) {
-                stats.put("total_relationships", relCount.get(0).get("total_relationships"));
+                stats.put("total_relationships", relCount.get(0).get("result"));
             }
 
             // Nodi per label
@@ -179,8 +179,10 @@ public class GraphTools {
                         "RETURN type, value.count AS count ORDER BY count DESC", null);
                 stats.put("relationships_by_type", byRelType);
             } else {
+                // AGE: single-column map syntax
                 List<Map<String, Object>> byLabel = executor.execute(
-                        "MATCH (n) RETURN labels(n) AS label, count(n) AS count", null);
+                        "MATCH (n) WITH labels(n) AS label, count(n) AS cnt ORDER BY cnt DESC " +
+                        "RETURN {label: label, count: cnt}", null);
                 stats.put("nodes_by_label", byLabel);
             }
 
