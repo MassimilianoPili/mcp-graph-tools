@@ -27,3 +27,11 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Publish to Gitea Maven Registry
+        run: |
+          mvn deploy -DskipTests \
+            -DaltDeploymentRepository=gitea::default::${{ github.server_url }}/api/packages/${{ github.repository_owner }}/maven \
+            -Dgpg.skip=true
+        env:
+          MAVEN_USERNAME: ${{ github.repository_owner }}
+          MAVEN_PASSWORD: ${{ secrets.GITEA_TOKEN }}
