@@ -122,7 +122,7 @@ public class GraphTools {
             } else if ("age".equals(executor.getType())) {
                 // AGE: single-column map syntax (AS (result agtype) requires one column)
                 List<Map<String, Object>> labels = executor.execute(
-                        "MATCH (n) WITH DISTINCT labels(n) AS l RETURN {labels: l}", null);
+                        "MATCH (n) WITH DISTINCT label(n) AS l RETURN {labels: l}", null);
                 schema.put("node_labels", labels);
 
                 List<Map<String, Object>> relTypes = executor.execute(
@@ -181,7 +181,7 @@ public class GraphTools {
             } else {
                 // AGE: single-column map syntax
                 List<Map<String, Object>> byLabel = executor.execute(
-                        "MATCH (n) WITH labels(n) AS label, count(n) AS cnt ORDER BY cnt DESC " +
+                        "MATCH (n) WITH label(n) AS label, count(n) AS cnt ORDER BY cnt DESC " +
                         "RETURN {label: label, count: cnt}", null);
                 stats.put("nodes_by_label", byLabel);
             }

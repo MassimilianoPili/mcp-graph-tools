@@ -192,7 +192,7 @@ public class InfraTools {
 
         // Fetch all infra nodes and filter in Java (AGE lacks full-text index)
         List<Map<String, Object>> allNodes = age.execute(
-                "MATCH (n) WHERE n.domain = 'infra' RETURN {id: id(n), label: labels(n)[0], " +
+                "MATCH (n) WHERE n.domain = 'infra' RETURN {id: id(n), label: label(n), " +
                 "name: n.name, path: n.path, image: n.image, engine: n.engine, backend: n.backend}", null);
 
         String q = query.toLowerCase();
